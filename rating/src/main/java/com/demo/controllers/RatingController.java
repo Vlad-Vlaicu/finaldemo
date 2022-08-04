@@ -39,8 +39,17 @@ public class RatingController {
             response.setStatus(HttpStatus.BAD_REQUEST);
             return ResponseEntity.of(Optional.of(response));
         }
-        int userId = Integer.parseInt(userIdRequest);
-        int bookId = Integer.parseInt(bookIdRequest);
+        int userId = 0;
+        int bookId = 0;
+        try{
+            userId = Integer.parseInt(userIdRequest);
+            bookId = Integer.parseInt(bookIdRequest);
+        }catch(Exception e){
+            RatingRecordResponse response = new RatingRecordResponse();
+            response.setStatus(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.of(Optional.of(response));
+        }
+
         return ResponseEntity.of(Optional.of(ratingService.getRatingRecord(userId,bookId)));
     }
 
