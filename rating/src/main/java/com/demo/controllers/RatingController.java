@@ -6,6 +6,7 @@ import com.demo.service.RatingService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -18,6 +19,7 @@ public class RatingController {
 
     private final RatingService ratingService;
 
+    @Transactional
     @PostMapping
     public ResponseEntity<RatingRecordResponse> registerRating(@RequestBody RatingRecordRequest ratingRecordRequest){
         RatingRecordResponse response = ratingService.registerRating(ratingRecordRequest);
