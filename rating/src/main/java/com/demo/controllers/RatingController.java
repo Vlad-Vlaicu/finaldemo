@@ -4,6 +4,7 @@ import com.demo.dto.RatingRecordRequest;
 import com.demo.dto.RatingRecordResponse;
 import com.demo.service.RatingService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/rating")
+@RequestMapping("/api/v1/ratings")
 @AllArgsConstructor
 public class RatingController {
 
@@ -28,27 +29,34 @@ public class RatingController {
         return ResponseEntity.of(Optional.of(777));
     }
 
-    @GetMapping("/getRating")
+    @GetMapping("/get")
     public ResponseEntity<RatingRecordResponse> getRating(@RequestParam Map<String,String> primaryKey){
-        int userId = Integer.parseInt(primaryKey.get("userId"));
-        int bookId = Integer.parseInt(primaryKey.get("bookId"));
+        String userIdRequest = primaryKey.get("userId");
+        String bookIdRequest = primaryKey.get("bookId");
+
+        if(userIdRequest == null || bookIdRequest == null){
+            RatingRecordResponse response = new RatingRecordResponse();
+            response.setStatus(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.of(Optional.of(response));
+        }
+        int userId = Integer.parseInt(userIdRequest);
+        int bookId = Integer.parseInt(bookIdRequest);
         return ResponseEntity.of(Optional.of(ratingService.getRatingRecord(userId,bookId)));
     }
 
-    @GetMapping("/getAllRatings")
+    @GetMapping
     public ResponseEntity<RatingRecordResponse> getAllRatings(){
         return ResponseEntity.of(Optional.of(ratingService.getAllRatings()));
     }
 
-    @GetMapping("/getRatingByUser/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<RatingRecordResponse> getRatingsByUser(@PathVariable Integer userId){
         return ResponseEntity.of(Optional.of(ratingService.getRatingsByUser(userId)));
     }
 
-    @GetMapping("/getRatingByBook/{bookId}")
+    @GetMapping("/books/{bookId}")
     public ResponseEntity<RatingRecordResponse> getRatingsByBook(@PathVariable Integer bookId){
         return ResponseEntity.of(Optional.of(ratingService.getRatingsByBook(bookId)));
     }
-
 
 }
